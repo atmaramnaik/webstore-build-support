@@ -59,6 +59,8 @@ services:
     depends_on:
       database:
         condition: service_healthy
+      registration-service:
+        condition: service_healthy
       unifiedapi:
         condition: service_started
     environment:
@@ -84,3 +86,5 @@ services:
         condition: service_healthy
       product-service:
         condition: service_healthy
+      unifiedapi:
+        condition: service_started
