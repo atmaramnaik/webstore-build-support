@@ -94,7 +94,6 @@ services:
         condition: service_started
     extra_hosts:
       - "dockerhost:172.20.0.1"
-      -
 networks:
   default:
     ipam:
