@@ -107,4 +107,5 @@ services:
 
 networks:
   main:
+    driver: bridge
 
