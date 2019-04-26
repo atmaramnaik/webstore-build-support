@@ -9,7 +9,7 @@ services:
     environment:
       SERVICE_PORT: 80
     networks:
-      main:
+      default:
         aliases:
           - unifiedapi
   database:
@@ -20,7 +20,7 @@ services:
     ports:
       - "3306:3306"
     networks:
-      main:
+      default:
         aliases:
           - database
     environment:
@@ -38,7 +38,7 @@ services:
     ports:
       - "9001:80"
     networks:
-      main:
+      default:
         aliases:
           - registration-service
     depends_on:
@@ -63,7 +63,7 @@ services:
     image: webstore/product-service:DEV
     container_name: product.service.dev
     networks:
-      main:
+      default:
         aliases:
           - product-service
     ports:
@@ -92,7 +92,7 @@ services:
     image: webstore/ui:DEV
     container_name: webstore.ui.dev
     networks:
-      main:
+      default:
         aliases:
           - ui
     ports:
@@ -106,6 +106,5 @@ services:
         condition: service_started
 
 networks:
-  main:
-    driver: bridge
+  default:
 
