@@ -8,11 +8,10 @@ services:
       - "9999:9999"
     environment:
       SERVICE_PORT: 80
-    links:
-      - database:database
-      - registration-service:registration-service
-      - product-service:product-service
-      - ui:ui
+    networks:
+      main:
+        aliases:
+          - unifiedapi
   database:
     image: webstore/db:DEV
     container_name: database.dev
@@ -20,6 +19,10 @@ services:
     restart: always
     ports:
       - "3306:3306"
+    networks:
+      main:
+        aliases:
+          - database
     environment:
       MYSQL_DATABASE: "webstore"
       MYSQL_USER: "vUser"
@@ -34,8 +37,10 @@ services:
     container_name: registration.service.dev
     ports:
       - "9001:80"
-    links:
-      - database:database
+    networks:
+      main:
+        aliases:
+          - registration-service
     depends_on:
       database:
         condition: service_healthy
@@ -57,8 +62,10 @@ services:
   product-service:
     image: webstore/product-service:DEV
     container_name: product.service.dev
-    links:
-      - database:database
+    networks:
+      main:
+        aliases:
+          - product-service
     ports:
       - "9002:80"
     depends_on:
@@ -84,6 +91,10 @@ services:
   ui:
     image: webstore/ui:DEV
     container_name: webstore.ui.dev
+    networks:
+      main:
+        aliases:
+          - ui
     ports:
       - "8080:80"
     depends_on:
@@ -94,4 +105,6 @@ services:
       unifiedapi:
         condition: service_started
 
+networks:
+  main:
 
