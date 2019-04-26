@@ -12,6 +12,16 @@ services:
       default:
         aliases:
           - unifiedapi
+    depends_on:
+      database:
+        condition: service_healthy
+      registration-service:
+        condition: service_healthy
+      product-service:
+        condition: service_healthy
+      ui:
+        condition: service_started
+
   database:
     image: webstore/db:DEV
     container_name: database.dev
@@ -44,8 +54,6 @@ services:
     depends_on:
       database:
         condition: service_healthy
-      unifiedapi:
-        condition: service_started
     environment:
       DB_HOST: "database"
       DB_PORT: "3306"
@@ -73,8 +81,6 @@ services:
         condition: service_healthy
       registration-service:
         condition: service_healthy
-      unifiedapi:
-        condition: service_started
     environment:
       DB_HOST: "database"
       DB_PORT: "3306"
@@ -102,8 +108,6 @@ services:
         condition: service_healthy
       product-service:
         condition: service_healthy
-      unifiedapi:
-        condition: service_started
 
 networks:
   default:
