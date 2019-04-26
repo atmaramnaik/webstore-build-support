@@ -13,8 +13,6 @@ services:
         aliases:
           - unifiedapi
     depends_on:
-      database:
-        condition: service_healthy
       registration-service:
         condition: service_healthy
       product-service:
