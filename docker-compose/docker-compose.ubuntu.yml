@@ -39,7 +39,7 @@ services:
       unifiedapi:
         condition: service_started
     environment:
-      DB_HOST: "localhost"
+      DB_HOST: "dockerhost"
       DB_PORT: "3306"
       DB: "webstore"
       DB_USER: "vUser"
@@ -66,7 +66,7 @@ services:
       unifiedapi:
         condition: service_started
     environment:
-      DB_HOST: "localhost"
+      DB_HOST: "dockerhost"
       DB_PORT: "3306"
       DB: "webstore"
       DB_USER: "vUser"
