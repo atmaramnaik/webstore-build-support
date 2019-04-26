@@ -3,3 +3,5 @@ build
 out
 .gradle
 unifiedapi.iml
+.DS_Store
+docker-compose/.DS_Store
