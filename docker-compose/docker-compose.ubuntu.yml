@@ -19,7 +19,7 @@ services:
       test: "exit 0"
 
   registration:
-    image: webstore/registration-service:DEV
+    image: webstore/registration-service:v0.0.1
     container_name: registration.service.dev
     ports:
       - "9001:80"
@@ -44,7 +44,7 @@ services:
       retries: 10
 
   product:
-    image: webstore/product-service:DEV
+    image: webstore/product-service:v0.0.1
     container_name: product.service.dev
     networks:
       default:
@@ -71,7 +71,7 @@ services:
       timeout: 5s
       retries: 10
   ui:
-    image: webstore/ui:DEV
+    image: webstore/ui:v0.0.1
     container_name: webstore.ui.dev
     networks:
       default:
@@ -86,7 +86,7 @@ services:
         condition: service_healthy
 
   unifiedapi:
-    image: webstore/unifiedapi:DEV
+    image: webstore/unifiedapi:v0.0.1
     container_name: unifiedapi.dev
     ports:
       - "80:80"

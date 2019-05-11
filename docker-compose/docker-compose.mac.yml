@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   unifiedapi:
-    image: atmaram/webstore-unifiedapi:v0.0.2
+    image: atmaram/webstore-unifiedapi:v0.0.1
     container_name: unifiedapi.dev
     ports:
       - "80:80"
@@ -84,7 +84,7 @@ services:
       timeout: 5s
       retries: 10
   ui:
-    image: atmaram/webstore-ui:v0.0.2
+    image: atmaram/webstore-ui:v0.0.1
     container_name: webstore.ui.dev
     ports:
       - "9003:80"
