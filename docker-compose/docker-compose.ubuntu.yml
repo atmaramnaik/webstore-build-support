@@ -1,27 +1,8 @@
 version: '2.3'
 services:
-  unifiedapi:
-    image: webstore/unifiedapi:DEV
-    container_name: unifiedapi.dev
-    ports:
-      - "80:80"
-      - "9999:9999"
-    environment:
-      SERVICE_PORT: 80
-    networks:
-      default:
-        aliases:
-          - unifiedapi
-    depends_on:
-      registration-service:
-        condition: service_healthy
-      product-service:
-        condition: service_healthy
-      ui:
-        condition: service_started
 
   database:
-    image: webstore/db:DEV
+    image: mysql:8.0.16
     container_name: database.dev
     command: mysqld --user=root --verbose
     restart: always
@@ -32,15 +13,12 @@ services:
         aliases:
           - database
     environment:
-      MYSQL_DATABASE: "webstore"
-      MYSQL_USER: "vUser"
-      MYSQL_PASSWORD: "U9e[FtrA^QC3Fv"
-      MYSQL_ROOT_PASSWORD: "test123"
+      MYSQL_ROOT_PASSWORD: "U9e[FtrA^QC3Fv"
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     healthcheck:
       test: "exit 0"
 
-  registration-service:
+  registration:
     image: webstore/registration-service:DEV
     container_name: registration.service.dev
     ports:
@@ -48,47 +26,47 @@ services:
     networks:
       default:
         aliases:
-          - registration-service
+          - registration
     depends_on:
       database:
         condition: service_healthy
     environment:
       DB_HOST: "database"
       DB_PORT: "3306"
-      DB: "webstore"
-      DB_USER: "vUser"
+      DB: "webstore-auth"
+      DB_USER: "root"
       DB_PASSWORD: "U9e[FtrA^QC3Fv"
       SERVICE_PORT: 80
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://registration-service/registration/health"]
+      test: [ "CMD", "curl", "-f", "http://registration/registration/health"]
       interval: 5s
       timeout: 5s
       retries: 10
 
-  product-service:
+  product:
     image: webstore/product-service:DEV
     container_name: product.service.dev
     networks:
       default:
         aliases:
-          - product-service
+          - product
     ports:
       - "9002:80"
     depends_on:
       database:
         condition: service_healthy
-      registration-service:
+      registration:
         condition: service_healthy
     environment:
       DB_HOST: "database"
       DB_PORT: "3306"
-      DB: "webstore"
-      DB_USER: "vUser"
+      DB: "webstore-product"
+      DB_USER: "root"
       DB_PASSWORD: "U9e[FtrA^QC3Fv"
       SERVICE_PORT: 80
-      REGISTRATION_SERVICE: "http://registration-service/registration"
+      REGISTRATION_SERVICE: "http://registration/registration"
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://product-service/product/health"]
+      test: [ "CMD", "curl", "-f", "http://product/product/health"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -100,12 +78,35 @@ services:
         aliases:
           - ui
     ports:
-      - "8080:80"
+      - "9003:80"
     depends_on:
-      registration-service:
+      registration:
         condition: service_healthy
-      product-service:
+      product:
         condition: service_healthy
+
+  unifiedapi:
+    image: webstore/unifiedapi:DEV
+    container_name: unifiedapi.dev
+    ports:
+      - "80:80"
+      - "9999:9999"
+    environment:
+      SERVICE_PORT: 80
+      REGISTRATION: "registration:80"
+      PRODUCT: "product:80"
+      UI: "ui:80"
+    networks:
+      default:
+        aliases:
+          - unifiedapi
+    depends_on:
+      registration:
+        condition: service_healthy
+      product:
+        condition: service_healthy
+      ui:
+        condition: service_started
 
 networks:
   default:
